@@ -32,9 +32,7 @@ router
 
     .post((req, res) => {
 
-      const item = req.body;
-
-      const name = item['item'];
+      const name = req.body.item;
 
       knexInstance('name')
 
@@ -63,18 +61,25 @@ router
 
         .then( result => {
 
-          let data = [];
+          if (result[0]) {
 
-          for (let i = 0; i < result.length; i++) {
+            let data = [];
 
-            data.push( result[i]['user_name'] );
+            for (let i = 0; i < result.length; i++) {
+
+              data.push( result[i]['user_name'] );
+
+            }
+
+            res.send(data);
+
+            res.sendStatus(200);
+
+          } else {
+
+            res.sendStatus(500);
 
           }
-
-          res.send(data);
-
-          res.sendStatus(200);
-
         })
     })
 
@@ -91,7 +96,7 @@ router
 
         .then( result => {
 
-          let userNames = result.map(row => row['user_name']);
+          let userNames = result.map( row => row[ 'user_name' ] );
 
           knexInstance('name')
 
