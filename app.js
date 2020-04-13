@@ -30,54 +30,88 @@ router
 
   .route('/')
 
-  .post((req, res) => {
+    .post((req, res) => {
 
-    const item = req.body;
+      const item = req.body;
 
-    const name = item['item'];
+      const name = item['item'];
 
-    knexInstance('name')
+      knexInstance('name')
 
-      .insert( { user_name: name } )
+        .insert( { user_name: name } )
 
-      .then( result => {
+        .then( result => {
 
-        if (result['rowCount'] === 1) {
+          if (result['rowCount'] === 1) {
+
+            res.sendStatus(200);
+
+          } else {
+
+            res.sendStatus(500);
+
+          }
+        })
+    })
+
+
+    .get((req, res) => {
+
+      knexInstance('name')
+
+        .select( '*' )
+
+        .then( result => {
+
+          let data = [];
+
+          for (let i = 0; i < result.length; i++) {
+
+            data.push( result[i]['user_name'] );
+
+          }
+
+          res.send(data);
 
           res.sendStatus(200);
 
-        } else {
-
-          res.sendStatus(500);
-
-        }
-      })
-  })
+        })
+    })
 
 
-  .get((req, res) => {
+router
 
-    knexInstance('name')
+  .route('/del')
 
-      .select( '*' )
+    .all((req, res) => {
 
-      .then( result => {
+      console.log('Delete req received.')
 
-        let data = [];
+      knexInstance
 
-        for (let i = 0; i < result.length; i++) {
+      knexInstance
 
-          data.push( result[i]['user_name'] );
+        .select('*')
 
-        }
+        .from('name')
 
-        res.send(data);
+        .then( result => {
 
-        res.sendStatus(200);
+          let userNames = result.map(row => row['user_name']);
 
-      })
-  })
+          knexInstance('name')
 
+            .whereIn('user_name', userNames)
+
+            .del()
+
+            .then( deletionResult => {
+
+              console.log(deletionResult);
+
+            })
+        });
+    })
 
 
 app.listen(port, () => console.log(`Listening at http://localhost:${port}`))
