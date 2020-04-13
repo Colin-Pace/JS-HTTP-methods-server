@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS name;
+
+CREATE TABLE IF NOT EXISTS name (
+
+    user_name TEXT NOT NULL
+
+);
