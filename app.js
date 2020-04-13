@@ -85,15 +85,9 @@ router
 
     .all((req, res) => {
 
-      console.log('Delete req received.')
-
-      knexInstance
-
-      knexInstance
+      knexInstance('name')
 
         .select('*')
-
-        .from('name')
 
         .then( result => {
 
@@ -106,8 +100,6 @@ router
             .del()
 
             .then( deletionResult => {
-
-              console.log(deletionResult);
 
             })
         });
